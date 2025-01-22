@@ -2,24 +2,218 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping List</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="style.css" />
-    <title>Shopping List</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+      :root {
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --danger-color: #ef4444;
+        --text-color: #1f2937;
+        --border-color: #e5e7eb;
+        --bg-color: #f9fafb;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        line-height: 1.5;
+        color: var(--text-color);
+        background: var(--bg-color);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      header img {
+        width: 32px;
+        height: 32px;
+      }
+
+      header h1 {
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      .form-control {
+        margin-bottom: 1rem;
+      }
+
+      .form-input,
+      .form-input-filter {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .form-input:focus,
+      .form-input-filter:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: white;
+        background: var(--primary-color);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .btn:hover {
+        background: var(--primary-hover);
+      }
+
+      .filter {
+        margin: 1.5rem 0;
+        position: relative;
+      }
+
+      .filter i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+      }
+
+      .form-input-filter {
+        padding-left: 2.5rem;
+      }
+
+      .items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .items li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: var(--bg-color);
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .items li:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .items li.edit-mode {
+        border: 2px solid var(--primary-color);
+        background: #fff;
+      }
+
+      .btn-link {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: all 0.2s;
+      }
+
+      .btn-link:hover {
+        opacity: 1;
+      }
+
+      .text-red {
+        color: var(--danger-color);
+      }
+
+      .btn-clear {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        color: var(--danger-color);
+        background: white;
+        border: 1px solid var(--danger-color);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-clear:hover {
+        background: var(--danger-color);
+        color: white;
+      }
+
+      .notification {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 1rem 1.5rem;
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        transform: translateX(120%);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding: 1.5rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <header>
-        <img src="images/note.png" alt="" />
+        <img src="images/note.png" alt="Shopping List Icon" />
         <h1>Shopping List</h1>
       </header>
+
       <form id="item-form">
         <div class="form-control">
           <input
@@ -38,43 +232,23 @@
       </form>
 
       <div class="filter">
+        <i class="fa-solid fa-search"></i>
         <input
           type="text"
           class="form-input-filter"
           id="filter"
-          placeholder="Filter Items"
+          placeholder="Search items..."
         />
       </div>
 
-      <ul id="item-list" class="items">
-        <!-- <li>
-          Apples
-          <button class="remove-item btn-link text-red">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </li>
-        <li>
-          Orange Juice
-          <button class="remove-item btn-link text-red">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </li>
-        <li>
-          Oreos
-          <button class="remove-item btn-link text-red">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </li>
-        <li>
-          Milk
-          <button class="remove-item btn-link text-red">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </li> -->
-      </ul>
+      <ul id="item-list" class="items"></ul>
 
-      <button id="clear" class="btn-clear">Clear All</button>
+      <button id="clear" class="btn-clear">
+        <i class="fa-solid fa-trash-can"></i> Clear All
+      </button>
     </div>
+
+    <div id="notification" class="notification"></div>
 
     <script src="script.js"></script>
   </body>
